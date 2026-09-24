@@ -1,5 +1,7 @@
 # agent-proof
 
+![agent-proof: record your AI agent doing a real task in one uncut take](https://raw.githubusercontent.com/askeleven/agent-proof/main/docs/social-preview.png)
+
 **Record your AI agent doing a real task as one uncut vertical video, with captions placed by the agent itself.**
 
 ```bash
