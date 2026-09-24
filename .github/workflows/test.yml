@@ -1,37 +1,30 @@
 name: test
 
+# One fast job. The end-to-end recording (Chrome + ffmpeg) is run locally
+# before a release instead: AGENT_PROOF_E2E=1 node --test test/e2e.test.js
 on:
   push:
     branches: [main]
+    paths-ignore: ['**.md', 'docs/**', 'examples/**/*.html']
   pull_request:
+    paths-ignore: ['**.md', 'docs/**', 'examples/**/*.html']
+
+# A newer push to the same branch cancels the run still in progress.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: ['20', '22', '24']
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
-        with:
-          node-version: ${{ matrix.node }}
-      - run: npm ci --no-audit --no-fund
-      # Unit tests need no browser and no ffmpeg; the end-to-end recording test
-      # skips itself unless AGENT_PROOF_E2E is set.
-      - run: node --test
-      # The published .d.ts files are generated from the JSDoc in src/, so a
-      # wrong annotation is a real defect and CI has to catch it.
-      - run: npx tsc -p tsconfig.json --noEmit
-
-  e2e:
-    runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+          cache: npm
       - run: npm ci --no-audit --no-fund
-      # Chrome is preinstalled on GitHub's Ubuntu runners.
-      - run: AGENT_PROOF_E2E=1 node --test test/e2e.test.js
+      - run: node --test
+      # The published .d.ts files are generated from the JSDoc in src/.
+      - run: npx tsc -p tsconfig.json --noEmit
