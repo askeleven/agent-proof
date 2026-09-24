@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Support inbox (toy example)</title>
+<style>
+  :root { --ink: #16202b; --muted: #6b7682; --line: #e3e6ea; --bg: #f6f7f8; --accent: #1f3a5f; --ok: #1d7a4f; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif; color: var(--ink); background: var(--bg); font-size: 15px; }
+  header { background: #fff; border-bottom: 1px solid var(--line); padding: 16px 18px; display: flex; justify-content: space-between; align-items: center; }
+  header b { font-size: 17px; }
+  .who { font-size: 12px; color: var(--muted); }
+  .status { margin: 14px 16px 0; font-size: 13px; color: var(--accent); font-weight: 600; min-height: 18px; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 14px; margin: 12px 16px; padding: 14px 16px; }
+  .ticket { display: flex; justify-content: space-between; gap: 10px; }
+  .ticket.open { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(31,58,95,.12); }
+  .subj { font-weight: 600; margin-top: 2px; }
+  .meta { font-size: 12px; color: var(--muted); }
+  .pill { font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 999px; background: #eef2f7; color: var(--accent); height: fit-content; }
+  .pill.Closed { background: #e6f4ec; color: var(--ok); }
+  .body { color: #33404d; line-height: 1.45; margin-top: 8px; }
+  h3 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 0; font-size: 14px; }
+  dt { color: var(--muted); }
+  .reply { white-space: pre-wrap; line-height: 1.45; min-height: 60px; }
+  .empty { color: var(--muted); text-align: center; padding: 40px 0; }
+  .spin { display: inline-block; width: 12px; height: 12px; border: 2px solid var(--accent); border-right-color: transparent; border-radius: 50%; animation: s 0.8s linear infinite; vertical-align: -2px; margin-right: 6px; }
+  @keyframes s { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<header><div><b>Support inbox</b><div class="who">Handled by: Support agent</div></div><div class="who">Toy example</div></header>
+<div class="status" id="status"></div>
+<div id="app"></div>
+<script>
+  const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))
+  async function tick() {
+    try {
+      const s = await (await fetch('/state')).json()
+      document.getElementById('status').textContent = s.status
+      let html = ''
+      if (!s.tickets.length) html += '<div class="card empty">No open tickets</div>'
+      for (const t of s.tickets) {
+        html += `<div class="card ticket ${s.open === t.id ? 'open' : ''}"><div><div class="meta">${esc(t.id)} . ${esc(t.from)} . ${esc(t.age)}</div><div class="subj">${esc(t.subject)}</div>${s.open === t.id ? '<div class="body">Hi, I was charged twice for order #4821 on May 3. Can you fix this?</div>' : ''}</div><span class="pill ${esc(t.status)}">${esc(t.status)}</span></div>`
+      }
+      if (s.lookup) {
+        html += '<div class="card"><h3>Customer</h3>'
+        html += s.customer
+          ? '<dl>' + Object.entries(s.customer).map(([k, v]) => `<dt>${esc(k)}</dt><dd style="margin:0">${esc(v)}</dd>`).join('') + '</dl>'
+          : '<div class="meta"><span class="spin"></span>Checking billing records</div>'
+        html += '</div>'
+      }
+      if (s.reply) html += `<div class="card"><h3>Reply</h3><div class="reply">${esc(s.reply)}</div></div>`
+      document.getElementById('app').innerHTML = html
+    } catch {}
+    setTimeout(tick, 300)
+  }
+  tick()
+</script>
+</body>
+</html>

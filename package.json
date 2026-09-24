@@ -1,0 +1,63 @@
+{
+  "name": "@askeleven/agent-proof",
+  "version": "0.1.0",
+  "description": "Record an AI agent doing a real task as one uncut vertical video, with captions placed by the agent's own step events. No staging, no edits, no voiceover.",
+  "type": "module",
+  "license": "MIT",
+  "author": "AskEleven",
+  "homepage": "https://github.com/askeleven/agent-proof",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/askeleven/agent-proof.git"
+  },
+  "bugs": {
+    "url": "https://github.com/askeleven/agent-proof/issues"
+  },
+  "keywords": [
+    "ai-agents",
+    "agents",
+    "screen-recording",
+    "demo-video",
+    "playwright",
+    "ffmpeg",
+    "social-video",
+    "observability"
+  ],
+  "bin": {
+    "agent-proof": "bin/cli.js"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./mark": {
+      "types": "./types/mark.d.ts",
+      "default": "./src/mark.js"
+    }
+  },
+  "files": [
+    "bin",
+    "src",
+    "types",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test",
+    "build:types": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build:types && npm test"
+  },
+  "types": "types/index.d.ts",
+  "dependencies": {
+    "playwright-core": "^1.55.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.2",
+    "typescript": "^5.9.3"
+  }
+}

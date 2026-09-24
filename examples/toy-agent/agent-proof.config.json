@@ -1,0 +1,11 @@
+{
+  "out": "out",
+  "launch": { "command": "node agent.js", "waitFor": "http://127.0.0.1:4800/state" },
+  "viewport": { "width": 540, "height": 960, "scale": 2 },
+  "events": { "http": { "port": 4747 } },
+  "start": [{ "goto": "http://127.0.0.1:4800/" }],
+  "steps": ["Ticket arrives", "Reads it", "Looks up the account", "Refunds and drafts", "Replies and closes"],
+  "stop": { "after": "Replies and closes", "hold": 4, "timeout": 300 },
+  "cut": { "target": 20, "minStep": 2.5, "maxStep": 6 },
+  "hook": "One take. Five steps. Every caption came from the agent itself."
+}
