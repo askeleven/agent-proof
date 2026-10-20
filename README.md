@@ -155,7 +155,7 @@ relative to the config file.
 | `cut` | `target` length in seconds, least and most time any step stays on screen, and `leadIn`: open this many seconds before the first step, dropping idle footage while the take waited for a trigger. |
 | `hook` | Opening card text. Omit for none. |
 | `chat` | `{ "title", "subtitle", "height" }` adds a messaging-app panel above the recording, fed by `message` events. |
-| `brand` | Colours and an optional woff2 font for the hook and step bar. |
+| `brand` | Colors and an optional woff2 font for the hook and step bar. |
 
 **Credentials come from the environment only.** `fill` and `type` take `env` for
 secrets; they never belong in the config file.
