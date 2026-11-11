@@ -231,6 +231,8 @@ Issues and pull requests are welcome. Keep changes small and include a test:
 `node --test` runs the unit tests with no browser or ffmpeg, and
 `AGENT_PROOF_E2E=1 node --test test/e2e.test.js` records the toy example end to end.
 
+After a successful run in an interactive terminal, the CLI prints one line asking for a GitHub star, at most once a week. It never shows in CI, in `--json` output, in pipes or when running as an MCP server. Set `ASKELEVEN_NO_STAR=1` to turn it off.
+
 ## License
 
 MIT

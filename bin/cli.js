@@ -3,6 +3,7 @@ import { parseArgs } from 'node:util'
 import { loadConfig } from '../src/config.js'
 import { record } from '../src/record.js'
 import { compose } from '../src/compose.js'
+import { starHint } from './star-hint.js'
 
 const USAGE = `
 agent-proof <command> <config>
@@ -101,4 +102,5 @@ async function main(argv) {
 
 main(process.argv.slice(2)).then((code) => {
   process.exitCode = code
+  starHint('agent-proof', code, process.argv.slice(2))
 })
