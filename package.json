@@ -1,6 +1,6 @@
 {
   "name": "@askeleven/agent-proof",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Record an AI agent doing a real task as one uncut vertical video, with captions placed by the agent's own step events. No staging, no edits, no voiceover.",
   "type": "module",
   "license": "MIT",
